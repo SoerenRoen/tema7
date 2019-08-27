@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="">
+</head>
+
+<body>
+
+    <div id="content">
+        <div>
+            <a href="www.kea.dk">KEA</a>
+        </div>
+        <div>
+            <a href="https://github.com/SoerenRoen">GitHub</a>
+        </div>
+        <div>
+            <img src="http://mabe-kea.dk/E19/pics/frog.png" alt="Frø">
+        </div>
+    </div>
+
+    <script>
+        let content = document.querySelector("#content");
+        let div1 = document.querySelector("#content div");
+        let div2 = document.querySelector("#content div + div");
+        let div3 = document.querySelector("#content div:nth-child(3)");
+        let div1a = document.querySelector("#content div a");
+        let div2a = document.querySelector("#content div:nth-child(2) a");
+        let img = document.querySelector("#content img");
+
+        //        content.innerHTML += "<h1>Et Link eller noget</h1>";
+        console.log(content);
+        console.log(div1);
+        console.log(div2);
+        console.log(div3);
+        console.log(div1a);
+        console.log(div2a);
+        console.log(img);
+    </script>
+</body>
+</html>

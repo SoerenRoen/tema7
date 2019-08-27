@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .firkant {
+            height: 100px;
+            width: 100px;
+            background-color: green;
+            text-align: center;
+            line-height: 100px;
+        }
+
+        .kugle {
+            height: 100px;
+            width: 100px;
+            background-color: red;
+            border-radius: 100px;
+            text-align: center;
+            line-height: 100px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="indhold">
+        <div class="firkant"></div>
+        <div class="kugle"></div>
+    </div>
+
+    <script>
+        let firkantURL = `http://mabe-kea.dk/E19/pics/frog.png`;
+        let kugleURL = `http://mabe-kea.dk/E19/pics/pig.png`;
+
+        document.querySelector(".firkant").innerHTML = `<img src= ${firkantURL} alt="Frø">`;
+        document.querySelector(".kugle").innerHTML = `<img src= ${kugleURL} alt="Gris">`;
+
+
+        // let kugle = document.querySelector(".kugle");
+        // kugle.textContent = "Rød Kugle";
+
+        //        document.querySelector(".firkant").textContent = "Grøn Firkant";
+        //        document.querySelector(".kugle").textContent = "Rød Kugle";
+    </script>
+</body>
+</html>
