@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>js-oevelse-1</title>
+    <style>
+        body {
+            color: burlywood;
+        }
+
+        #display {
+            width: 200px;
+            height: 200px;
+            border: 1px solid silver;
+            margin: 7vw;
+            padding: 1vw;
+            overflow: hidden;
+        }
+
+        /*********************/
+    </style>
+
+</head>
+
+<body>
+    <div id="display"></div>
+
+    <script>
+        let liste = ["Sound of Music", "Dancing in the rain", "What a Wonderfull World", "Lille Peter Edderkop", "Yesterday", "Den Knaldrøde Gummibåd", "Krøller eller Ej", "Ved Landsbyens Grænser", "Smilende Sussi", "Så Længe Jeg Lever"];
+
+        liste.forEach(sang => {
+            document.querySelector("#display").innerHTML += `${sang} <br>`;
+        })
+    </script>
+</body>
+
+</html>
