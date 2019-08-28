@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .firkant {
+            height: 200px;
+            width: 200px;
+            background-color: green;
+            text-align: center;
+            line-height: 250px;
+        }
+
+        .kugle {
+            height: 200px;
+            width: 200px;
+            background-color: red;
+            border-radius: 100px;
+            text-align: center;
+            line-height: 250px
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="indhold">
+        <div class="firkant"></div>
+        <div class="kugle"></div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", start);
+
+        function start() {
+
+            console.log("Content Loaded");
+
+            let firkant = document.querySelector(".firkant");
+            let kugle = document.querySelector(".kugle");
+
+            let firkantURL = `http://mabe-kea.dk/E19/pics/frog.png`;
+            let kugleURL = `http://mabe-kea.dk/E19/pics/pig.png`;
+
+            document.querySelector(".firkant").innerHTML = `<img src= ${firkantURL} alt="Frø">`;
+            document.querySelector(".kugle").innerHTML = `<img src= ${kugleURL} alt="Gris">`;
+        }
+
+        document.querySelector(".firkant").addEventListener("click", clickGreen);
+        document.querySelector(".kugle").addEventListener("click", stop);
+
+        function clickGreen() {
+            console.log("Click Grøn");
+
+            let firkantURL = `http://mabe-kea.dk/E19/pics/frog.png`;
+            let kugleURL = `http://mabe-kea.dk/E19/pics/pig.png`;
+
+            document.querySelector(".firkant").innerHTML = `<img src= ${kugleURL} alt="Gris">`;
+            document.querySelector(".kugle").innerHTML = `<img src= ${firkantURL} alt="Frø">`;
+
+            document.querySelector(".firkant").removeEventListener("click", clickGreen);
+            document.querySelector(".firkant").addEventListener("click", clickGreenIgen);
+        }
+
+        function clickGreenIgen() {
+            console.log("Click Grøn Igen");
+
+            let firkantURL = `http://mabe-kea.dk/E19/pics/frog.png`;
+            let kugleURL = `http://mabe-kea.dk/E19/pics/pig.png`;
+
+            document.querySelector(".firkant").innerHTML = `<img src= ${firkantURL} alt="Frø">`;
+            document.querySelector(".kugle").innerHTML = `<img src= ${kugleURL} alt="Gris">`;
+
+            document.querySelector(".firkant").removeEventListener("click", clickGreenIgen);
+            document.querySelector(".firkant").addEventListener("click", clickGreen);
+        }
+
+        function stop() {
+            console.log("Stop");
+
+            let firkant = document.querySelector(".firkant");
+            let kugle = document.querySelector(".kugle");
+
+            let firkantURL = `http://mabe-kea.dk/E19/pics/frog.png`;
+            let kugleURL = `http://mabe-kea.dk/E19/pics/pig.png`;
+
+            //            document.querySelector(".firkant").innerHTML = `<img src= ${kugleURL} alt="Gris">`;
+            //            document.querySelector(".kugle").innerHTML = `<img src= ${firkantURL} alt="Frø">`;
+
+            firkant.style.backgroundColor = "red";
+            kugle.style.backgroundColor = "green";
+
+
+            document.querySelector(".kugle").removeEventListener("click", stop);
+            document.querySelector(".firkant").removeEventListener("click", clickGreen);
+            document.querySelector(".firkant").removeEventListener("click", clickGreenIgen);
+        }
+    </script>
+</body>
+</html>
