@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>03-Objects</title>
+</head>
+<style>
+    .modtager {
+        display: grid;
+        grid-gap: 20px;
+        /*        grid-template-columns: 1fr 1fr;*/
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    article {
+        border: solid 2px black;
+        padding: 5vw;
+    }
+
+    /*
+article:nth-child(even) {
+background-color: grey;
+}
+*/
+
+    img {
+        width: 20%;
+        /*        height: 50%;*/
+    }
+
+
+    @media screen and (min-width: 1000px) {
+        .modtager {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+
+<body>
+
+    <template>
+        <article class="dyr">
+            <h2></h2>
+            <img src="" alt="">
+            <p class="type"></p>
+            <p class="levested"></p>
+        </article>
+    </template>
+
+    <section class="modtager"></section>
+
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", start);
+
+        function start() {
+            console.log("contentLoaded");
+
+            const modtagerKloner = document.querySelector(".modtager");
+            const temp = document.querySelector("template");
+
+            let dyr = [];
+
+            async function getJson() {
+                console.log("Get Json")
+                let jsonData = await fetch("dyr.json");
+                console.log(jsonData);
+                dyr = await jsonData.json();
+                console.log(dyr);
+                visDyr();
+            }
+
+            function visDyr() {
+                dyr.forEach(dyrEnkelt => {
+                    const klon = temp.cloneNode(true).content;
+                    klon.querySelector("h2").textContent = dyrEnkelt.navn;
+                    klon.querySelector("img").src = dyrEnkelt.billede;
+                    klon.querySelector(".type").textContent = dyrEnkelt.type;
+                    klon.querySelector(".levested").textContent = dyrEnkelt.levested;
+
+                    modtagerKloner.appendChild(klon);
+                })
+            }
+
+            getJson();
+
+
+            //            console.log(dyr);
+            //            dyr.forEach(dyr => {
+            // document.querySelector("article").innerHTML += `<p>${dyr.navn} ${dyr.type}</p>`;
+            // })
+
+
+        }
+    </script>
+</body>
+
+</html>

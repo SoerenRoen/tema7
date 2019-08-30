@@ -17,9 +17,20 @@
         padding: 5vw;
     }
 
+    article:nth-child(even) {
+        background-color: grey;
+    }
+
     img {
         width: 50%;
         /*        height: 50%;*/
+    }
+
+
+    @media screen and (min-width: 1000px) {
+        .modtager {
+            grid-template-columns: repeat(3, 1fr);
+        }
     }
 </style>
 
