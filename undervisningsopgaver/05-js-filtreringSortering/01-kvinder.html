@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Person Liste</title>
+    <style>
+        /*
+        #knapper {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .valgt {
+            background-color: darkgrey;
+        }
+*/
+
+        .modtager {
+            display: grid;
+            grid-gap: 20px;
+            /*        grid-template-columns: 1fr 1fr;*/
+            grid-template-columns: repeat(1, 1fr);
+        }
+
+        article {
+            display: flex;
+            border: solid 2px black;
+            padding: 5vw;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        article:nth-child(even) {
+            border-color: darkgrey;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            /*        height: 50%;*/
+        }
+
+        @media screen and (min-width: 600px) {
+            .modtager {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media screen and (min-width: 1000px) {
+            .modtager {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <template>
+        <article class="personer">
+            <h2></h2>
+            <img src="" alt="">
+            <a class="gitHub" target="_blank" href=""></a>
+        </article>
+    </template>
+
+    <!--
+    <nav id="knapper">
+        <button>Alle</button>
+        <button>Mænd</button>
+        <button class="valgt">Kvinder</button>
+        <button>Andet</button>
+                <button>Christopher Grøn</button>
+    </nav>
+-->
+
+    <section class="modtager"></section>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", getJson);
+
+        console.log("contentLoaded");
+
+        const modtagerKloner = document.querySelector(".modtager");
+        const temp = document.querySelector("template");
+
+        let personer = [];
+        let filter = "k";
+
+        async function getJson() {
+            console.log("Hent json")
+            let jsonData = await fetch("https://spreadsheets.google.com/feeds/list/1Xge7slZ9dEOTCn1Yxl3OE4xgvrXOL8Y_iu3WN1yGB1U/od6/public/values?alt=json");
+            console.log(jsonData);
+            personer = await jsonData.json();
+            console.log(personer);
+            visPersoner();
+        }
+
+
+        function visPersoner() {
+            personer.feed.entry.forEach((person) => {
+                if (person.gsx$køn.$t == filter) {
+                    const klon = temp.cloneNode(true).content;
+                    klon.querySelector("h2").textContent = person.gsx$navn.$t;
+                    klon.querySelector("img").src = person.gsx$billede.$t;
+                    klon.querySelector(".gitHub").textContent = person.gsx$github.$t;
+                    klon.querySelector(".gitHub").href = `https://www.github.com/${person.gsx$github.$t}`;
+
+                    modtagerKloner.appendChild(klon);
+                }
+            })
+        }
+
+    </script>
+</body>
+
+</html>
