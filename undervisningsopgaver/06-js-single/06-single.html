@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Single Person</title>
+
+    <style>
+        h1 {
+            text-align: center;
+        }
+
+        h3 {
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 0px;
+        }
+
+        body {
+            margin: 0;
+        }
+
+        button {
+            margin: 5px;
+        }
+
+        #single {
+            position: fixed;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.94);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .indhold {
+            width: 70vw;
+            min-height: 50vh;
+            background: #fff;
+            margin: 4rem auto;
+            padding: 10px;
+        }
+
+        .luk {
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            float: right;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <main id="single">
+        <button class="luk">Tilbage</button>
+        <section class="indhold">
+            <article class="enkeltPerson">
+                <img src="" alt="">
+                <h2></h2>
+                <p class="status"></p>
+                <p>GitHub: <a class="gitHub" target="_blank" href=""></a></p>
+                <p class="historie"></p>
+            </article>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", getJson);
+
+        let urlParams = new URLSearchParams(window.location.search);
+        let github = urlParams.get("github");
+        let personer;
+
+        async function getJson() {
+            console.log("Hent json")
+            let jsonData = await fetch("https://spreadsheets.google.com/feeds/list/1Xge7slZ9dEOTCn1Yxl3OE4xgvrXOL8Y_iu3WN1yGB1U/od6/public/values?alt=json");
+            console.log(jsonData);
+            personer = await jsonData.json();
+            console.log(personer);
+            visPersoner();
+
+        }
+
+        function visPersoner() {
+            console.log("vis personer");
+            personer.feed.entry.forEach((person) => {
+                if (person.gsx$github.$t == github) {
+                    document.querySelector("h2").textContent = `${person.gsx$navn.$t},  ${person.gsx$alder.$t}`;
+                    document.querySelector("img").src = person.gsx$billede.$t;
+                    document.querySelector(".gitHub").textContent = person.gsx$github.$t;
+                    document.querySelector(".gitHub").href = `https://www.github.com/${person.gsx$github.$t}`;
+                    //            document.querySelector(".status").textContent = person.gsx$status.$t;
+                    //            document.querySelector(".historie").textContent = person.gsx$historie.$t;
+                }
+            })
+            document.querySelector(".luk").addEventListener("click", () => {
+                history.back();
+            })
+        }
+    </script>
+</body>
+
+</html>

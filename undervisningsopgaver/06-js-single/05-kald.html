@@ -21,6 +21,7 @@
             margin: 0;
         }
 
+        /*
         #popup {
             position: fixed;
             top: 0px;
@@ -32,17 +33,22 @@
             align-items: center;
             flex-direction: column;
         }
+*/
 
+        /*
         #popup button {
             align-self: flex-start;
         }
+*/
 
-        .enkeltPerson {
-            background: rgba(216, 216, 216, 0.79);
-            height: 300px;
-            padding: 5vw;
-            width: 350px;
-        }
+        /*
+.enkeltPerson {
+background: rgba(216, 216, 216, 0.79);
+height: 300px;
+padding: 5vw;
+width: 350px;
+}
+*/
 
         .valgt {
             background-color: #ff9d00;
@@ -84,7 +90,6 @@
         }
 
         img {
-            /*            width: 100%;*/
             width: 120px;
             height: 150px;
             object-fit: cover;
@@ -106,15 +111,6 @@
 </head>
 
 <body>
-
-    <div id="popup">
-        <button class="luk">X</button>
-        <article class="enkeltPerson">
-            <img class="billede" src="" alt="">
-            <h2></h2>
-            <p>GitHub: <a class="gitHub" target="_blank" href=""></a></p>
-        </article>
-    </div>
 
     <template>
         <article class="personer">
@@ -140,9 +136,6 @@
         <button class="hold" data-hold="b">Hold B</button>
     </nav>
 
-    <!--        <button>Christopher Grøn</button>-->
-
-
     <section class="modtager"></section>
 
 
@@ -157,6 +150,8 @@
         let personer = [];
         let køn = "alle";
         let hold = "begge";
+
+
 
         async function getJson() {
             console.log("Hent json")
@@ -182,20 +177,21 @@
                     klon.querySelector(".gitHub").textContent = person.gsx$github.$t;
                     klon.querySelector(".gitHub").href = `https://www.github.com/${person.gsx$github.$t}`;
 
-
-
                     dest.appendChild(klon);
 
                     dest.lastElementChild.addEventListener("click", () => {
-                        visSingle(person);
-                    })
+                        location.href = `06-single.html?github=${person.gsx$github.$t}`;
+
+                    });
+
+                    addEventlistnerToButtons();
+                    addEventlistnerToHoldButtons();
 
                 }
             })
-            addEventlistnerToButtons();
-            addEventlistnerToHoldButtons();
 
         }
+
 
         function addEventlistnerToButtons() {
             document.querySelectorAll(".filter").forEach(elm => {
@@ -231,22 +227,6 @@
             })
             this.classList.add("valgt");
             visPersoner();
-        }
-
-        function visSingle(person) {
-            document.querySelector("#popup").style.display = "flex";
-            document.querySelector("#popup .luk").addEventListener("click", lukSingle);
-
-            document.querySelector(".enkeltPerson h2").textContent = `${person.gsx$navn.$t},  ${person.gsx$alder.$t}`;
-            //            document.querySelector(".enkeltPerson .status").textContent = person.gsx$status.$t;
-            document.querySelector(".enkeltPerson img").src = person.gsx$billede.$t;
-            document.querySelector(".enkeltPerson .gitHub").textContent = person.gsx$github.$t;
-            document.querySelector(".enkeltPerson .gitHub").href = `https://www.github.com/${person.gsx$github.$t}`;
-            //            document.querySelector(".enkeltPerson .historie").textContent = person.gsx$historie.$t;
-        }
-
-        function lukSingle() {
-            document.querySelector("#popup").style.display = "none";
         }
     </script>
 </body>
