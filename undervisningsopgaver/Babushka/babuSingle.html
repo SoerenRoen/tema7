@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Bistro Babushka Menu</title>
+    <style>
+        h1 {
+            text-align: center;
+            color: green;
+        }
+
+        h3 {
+            text-align: center;
+            color: red
+        }
+
+        h2 {
+            margin: 10px 0px 10px;
+        }
+
+        p {
+            margin: 10px 0 10px;
+        }
+
+        body {
+            margin: 0;
+            background-color: white;
+        }
+
+        .modtager {
+            padding: 10px;
+        }
+
+        .valgt {
+            border: solid 2px green;
+        }
+
+        .retter {
+            display: grid;
+            grid-gap: 20px;
+            grid-template-columns: repeat(1, 1fr);
+            /*            border: solid 1px black;*/
+            margin: 10px;
+            padding: 20px;
+        }
+
+        nav {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            margin-bottom: 20px;
+        }
+
+        button {
+            margin: 5px;
+        }
+
+        #begge {
+            grid-column: 1/3;
+        }
+
+        .retter {
+            border: solid 5px green;
+
+        }
+
+
+        .retter:nth-child(even) {
+            border: solid 5px red;
+        }
+
+
+        img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .indhold {
+            width: 80%;
+            height: 50%;
+            padding: 20px;
+            background: white;
+            overflow: hidden;
+        }
+
+        .enkeltRet {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        @media screen and (min-width: 600px) {
+            .retter {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media screen and (min-width: 1000px) {
+            .retter {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <template>
+        <article class="retter">
+            <h2></h2>
+            <p class="beskrivelse">beskrivelse</p>
+            <p class="pris">Pris ... ,-</p>
+            <img class="billede" src="" alt="">
+        </article>
+    </template>
+
+    <h1>Menu</h1>
+    <h3>Alle Retter</h3>
+    <nav id="knapper">
+        <button class="filter valgt" data-kategori="alle">Alle Retter</button>
+        <button class="filter" data-kategori="forretter">Forretter</button>
+        <button class="filter" data-kategori="hovedretter">Hovedretter</button>
+        <button class="filter" data-kategori="desserter">Desserter</button>
+        <button class="filter" data-kategori="drikkevarer">Drikkevarer</button>
+        <button class="filter" data-kategori="sideorders">Side Orders</button>
+    </nav>
+
+    <section class="modtager"></section>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", getJson);
+
+        console.log("contentLoaded");
+
+
+        let babushka = [];
+
+        let filter = "alle";
+
+
+        const dest = document.querySelector(".modtager");
+        const temp = document.querySelector("template");
+
+        async function getJson() {
+            console.log("Hent json")
+            let jsonData = await fetch("https://spreadsheets.google.com/feeds/list/17Dd7DvkPaFamNUdUKlrFgnH6POvBJXac7qyiS6zNRw0/od6/public/values?alt=json");
+            console.log(jsonData);
+            babushka = await jsonData.json();
+            console.log(babushka);
+            visRetter();
+        }
+
+
+        function visRetter() {
+            console.log("vis retter");
+
+            dest.innerHTML = "";
+            babushka.feed.entry.forEach((ret) => {
+                if (filter == "alle" || filter == ret.gsx$kategori.$t) {
+                    const klon = temp.cloneNode(true).content;
+                    klon.querySelector(".billede").src = `imgs/small/${ret.gsx$billede.$t}-sm.jpg`;
+                    klon.querySelector(".billede").textContent = ret.gsx$billede.$t;
+                    klon.querySelector("h2").textContent = ret.gsx$navn.$t;
+                    klon.querySelector(".beskrivelse").textContent = ret.gsx$kort.$t;
+                    klon.querySelector(".pris").textContent = `Pris - ${ret.gsx$pris.$t} ,-`;
+
+                    dest.appendChild(klon);
+
+                    dest.lastElementChild.addEventListener("click", () => {
+                        location.href = `singleView.html?id=${ret.gsx$id.$t}`;
+                    })
+
+                };
+            })
+            addEventlistnerToButtons();
+
+        }
+
+        function addEventlistnerToButtons() {
+            document.querySelectorAll(".filter").forEach(elm => {
+                elm.addEventListener("click", filtrering);
+            })
+        }
+
+        function filtrering() {
+            console.log("click");
+
+            filter = this.dataset.kategori;
+
+            document.querySelector("h3").textContent = this.textContent;
+            document.querySelectorAll(".filter").forEach(elm => {
+                elm.classList.remove("valgt");
+            })
+            this.classList.add("valgt");
+            visRetter();
+        }
+    </script>
+</body>
+
+</html>

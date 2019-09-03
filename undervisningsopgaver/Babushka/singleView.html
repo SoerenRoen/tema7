@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Single Ret</title>
+
+    <style>
+        h1 {
+            text-align: center;
+            color: green;
+        }
+
+        h3 {
+            text-align: center;
+            color: red
+        }
+
+        h2 {
+            margin: 10px 0px 10px;
+        }
+
+        p {
+            margin: 10px 0 10px;
+        }
+
+        body {
+            margin: 0;
+            /*            background-color: rgba(0, 0, 0, 0.90);*/
+        }
+
+
+        button {
+            margin: 5px;
+        }
+
+
+        img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        #single {
+            justify-content: center;
+        }
+
+        .indhold {
+            /*            width: 70%;*/
+            /*            height: 50%;*/
+            padding: 20px;
+            background: white;
+            overflow: hidden;
+        }
+
+        .enkeltRet {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <main id="single">
+        <button class="luk">Tilbage</button>
+        <section class="indhold">
+            <article class="enkeltRet">
+                <h2></h2>
+                <p class="langbeskrivelse">beskrivelse</p>
+                <p class="pris"></p>
+                <img class="billede" src="" alt="">
+            </article>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", getJson);
+
+        let urlParams = new URLSearchParams(window.location.search);
+        let id = urlParams.get("id");
+        let babushka;
+
+        async function getJson() {
+            console.log("Hent json")
+            let jsonData = await fetch("https://spreadsheets.google.com/feeds/list/17Dd7DvkPaFamNUdUKlrFgnH6POvBJXac7qyiS6zNRw0/od6/public/values?alt=json");
+            console.log(jsonData);
+            babushka = await jsonData.json();
+            console.log(babushka);
+            visRet();
+
+        }
+
+        function visRet() {
+            console.log("vis ret");
+            babushka.feed.entry.forEach((ret) => {
+                if (ret.gsx$id.$t == id) {
+                    document.querySelector("h2").textContent = `${ret.gsx$navn.$t} - ${ret.gsx$pris.$t} ,-`;
+                    document.querySelector(".billede").src = `imgs/large/${ret.gsx$billede.$t}.jpg`;
+                    document.querySelector(".billede").textContent = ret.gsx$billede.$t;
+                    document.querySelector(".langbeskrivelse").textContent = ret.gsx$lang.$t;
+                }
+            })
+            document.querySelector(".luk").addEventListener("click", () => {
+                history.back();
+            })
+        }
+
+    </script>
+</body>
+
+</html>
