@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Person Liste</title>
+    <style>
+        h1 {
+            text-align: center;
+        }
+
+        h3 {
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 0px;
+        }
+
+        body {
+            margin: 0;
+        }
+
+        #popup {
+            position: fixed;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.94);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #popup button {
+            align-self: flex-start;
+        }
+
+        .enkeltPerson {
+            background: rgba(216, 216, 216, 0.79);
+            height: 300px;
+            padding: 5vw;
+            width: 350px;
+        }
+
+        .valgt {
+            background-color: #ff9d00;
+        }
+
+        .modtager {
+            display: grid;
+            grid-gap: 20px;
+            grid-template-columns: repeat(1, 1fr);
+        }
+
+        nav {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            margin-bottom: 20px;
+        }
+
+        button {
+            margin: 5px;
+        }
+
+        #begge {
+            grid-column: 1/3;
+        }
+
+        .personer {
+            border: outset 10px #b974ff;
+            background-color: #cfa3fc;
+            padding: 5vw;
+            flex-direction: column;
+            height: 150px;
+
+        }
+
+
+        .personer:nth-child(even) {
+            border-color: #ff9d00;
+            background-color: #ffb033;
+        }
+
+        img {
+            /*            width: 100%;*/
+            width: 120px;
+            height: 150px;
+            object-fit: cover;
+            float: right;
+        }
+
+        @media screen and (min-width: 600px) {
+            .modtager {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media screen and (min-width: 1000px) {
+            .modtager {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="popup">
+        <button class="luk">X</button>
+        <article class="enkeltPerson">
+            <img class="billede" src="" alt="">
+            <h2></h2>
+            <p>GitHub: <a class="gitHub" target="_blank" href=""></a></p>
+        </article>
+    </div>
+
+    <template>
+        <article class="personer">
+            <img src="" alt="">
+            <h2></h2>
+            <a class="gitHub" target="_blank" href=""></a>
+        </article>
+    </template>
+
+    <h1>Alle</h1>
+    <h3>Hold Fast</h3>
+    <nav id="knapper">
+        <button class="filter valgt" data-køn="alle">Alle</button>
+        <button class="filter" data-køn="m">Mænd</button>
+        <button class="filter" data-køn="k">Kvinder</button>
+        <button class="filter" data-køn="andet">Andet</button>
+
+        <button class="hold valgt" data-hold="begge" id="begge">Begge Fast</button>
+        <button class="hold" data-hold="a">Hold A</button>
+        <button class="hold" data-hold="b">Hold B</button>
+    </nav>
+
+    <!--        <button>Christopher Grøn</button>-->
+
+
+    <section class="modtager"></section>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", getJson);
+
+        console.log("contentLoaded");
+
+        const dest = document.querySelector(".modtager");
+        const temp = document.querySelector("template");
+
+        let personer = [];
+        let køn = "alle";
+        let hold = "begge";
+
+        async function getJson() {
+            console.log("Hent json")
+            let jsonData = await fetch("https://spreadsheets.google.com/feeds/list/1Xge7slZ9dEOTCn1Yxl3OE4xgvrXOL8Y_iu3WN1yGB1U/od6/public/values?alt=json");
+            console.log(jsonData);
+            personer = await jsonData.json();
+            console.log(personer);
+            visPersoner();
+
+        }
+
+
+        function visPersoner() {
+            console.log("vis personer");
+
+            dest.innerHTML = "";
+            personer.feed.entry.forEach((person) => {
+                if (køn == "alle" && hold == "begge" || køn == person.gsx$køn.$t && hold == "begge" || køn == person.gsx$køn.$t && hold == person.gsx$hold.$t || køn == "alle" && hold == person.gsx$hold.$t) {
+                    const klon = temp.cloneNode(true).content;
+                    klon.querySelector("h2").textContent = `${person.gsx$navn.$t},  ${person.gsx$alder.$t}`;
+                    klon.querySelector("img").src = person.gsx$billede.$t;
+                    klon.querySelector(".gitHub").textContent = person.gsx$github.$t;
+                    klon.querySelector(".gitHub").href = `https://www.github.com/${person.gsx$github.$t}`;
+
+                    dest.appendChild(klon);
+
+                    dest.lastElementChild.addEventListener("click", () => {
+                        visSingle(person);
+                    })
+
+                }
+            })
+            addEventlistnerToButtons();
+            addEventlistnerToHoldButtons();
+
+        }
+
+        function addEventlistnerToButtons() {
+            document.querySelectorAll(".filter").forEach(elm => {
+                elm.addEventListener("click", filtrering);
+            })
+        }
+
+        function addEventlistnerToHoldButtons() {
+            document.querySelectorAll(".hold").forEach(elm => {
+                elm.addEventListener("click", holdFiltrering);
+            })
+        }
+
+        function filtrering() {
+            console.log("click");
+
+            køn = this.dataset.køn;
+            document.querySelector("h1").textContent = this.textContent;
+            document.querySelectorAll(".filter").forEach(elm => {
+                elm.classList.remove("valgt");
+            })
+            this.classList.add("valgt");
+            visPersoner();
+        }
+
+        function holdFiltrering() {
+            console.log("Hold Filtrering");
+
+            hold = this.dataset.hold;
+            document.querySelector("h3").textContent = this.textContent;
+            document.querySelectorAll(".hold").forEach(elm => {
+                elm.classList.remove("valgt");
+            })
+            this.classList.add("valgt");
+            visPersoner();
+        }
+
+        function visSingle(person) {
+            document.querySelector("#popup").style.display = "flex";
+            document.querySelector("#popup .luk").addEventListener("click", lukSingle);
+
+            document.querySelector(".enkeltPerson h2").textContent = `${person.gsx$navn.$t},  ${person.gsx$alder.$t}`;
+            document.querySelector(".enkeltPerson img").src = person.gsx$billede.$t;
+            document.querySelector(".enkeltPerson .gitHub").textContent = person.gsx$github.$t;
+            document.querySelector(".enkeltPerson .gitHub").href = `https://www.github.com/${person.gsx$github.$t}`;
+        }
+
+        function lukSingle() {
+            document.querySelector("#popup").style.display = "none";
+        }
+    </script>
+</body>
+
+</html>
